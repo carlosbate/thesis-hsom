@@ -1,0 +1,9 @@
+//UbiFactory Microservice configuration file
+{
+  "http.port":8989,
+  "db.config":{
+    "db.service.address": "database.mongo.service",
+    "db.collection":"ubifactory",
+    "service.address":"ubi.factory"
+  }
+}

@@ -1,0 +1,17 @@
+//UbiFactory Microservice configuration file
+{
+  "http.port":8989,
+  "db.config":{
+    "db.service.address": "database.mongo.service",
+    "db.collection":"ubifactory",
+    "service.address":"ubi.factory"
+  },
+  //service.type = hashmap | jdbc | mongodb NOTE: ONLY WORKS FOR MONGODB AND HASHMAP
+  "service.type":"mongo",
+  "mongo.config":{
+    "service.address": "database.mongo.service",
+    "db_name":"test_db",
+    "useObjectId":true,
+    "connection_string":"mongodb://127.0.0.1:27017"
+  }
+}

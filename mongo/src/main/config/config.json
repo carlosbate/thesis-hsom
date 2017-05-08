@@ -1,0 +1,7 @@
+//MONGODB Microservice configuration file
+{
+  "service.address": "database.mongo.service",
+  "db_name":"test_db",
+  "useObjectId":true,
+  "connection_string":"mongodb://127.0.0.1:27017"
+}

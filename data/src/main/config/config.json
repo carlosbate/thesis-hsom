@@ -1,0 +1,9 @@
+//Data Microservice configuration file
+{
+  "http.port":8585,
+  "persistence.service.config": {
+    "db.service.address": "database.mongo.service",
+    "db.service.collection":"datastreamers",
+    "persistence.service.address":"data.streamers"
+  }
+}

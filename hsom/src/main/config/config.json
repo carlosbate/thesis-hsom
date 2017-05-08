@@ -1,0 +1,8 @@
+//HSOM Microservice configuration file
+{
+  "http.port":8888,
+  "db.address":"database.mongo.service",
+  "db.collection":"hsom",
+  "ubifactory.address":"ubi.factory",
+  "datastreamers.address":"data.streamers"
+}
