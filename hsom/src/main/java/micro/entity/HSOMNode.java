@@ -115,7 +115,8 @@ public class HSOMNode extends AbstractVerticle {
         res.put("id", this.id);
         res.put("consumers", new JsonArray(this.consumers.toString()));
         res.put("streamers", new JsonArray(this.streamers.toString()));
-        //res.put("model", this.ubi.toJson());
+        if(this.ubi != null)
+            res.put("model", this.ubi.toJson());
         return res;
     }
 }
