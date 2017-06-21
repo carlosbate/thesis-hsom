@@ -19,15 +19,15 @@ public final class DataStreamerFactory {
     }
   }
 
-  public static JsonObject createZipper(List<String> order, long timer){
+  public static JsonObject createZipperPostRequest(List<String> order, long timer){
     JsonObject o = new JsonObject();
     o.put("type", DataStreamerType.ZIP);
-    o.put("order", JsonUtils.convertListToJA(order));
+    o.put("order", JsonUtils.convertToJA(order));
     o.put("timer", timer);
     return o;
   }
 
-  public static JsonObject createProxy(String in, String out){
+  public static JsonObject createProxyPostRequest(String in, String out){
     JsonObject o = new JsonObject();
     o.put("type", DataStreamerType.PROXY);
     o.put("in", in);

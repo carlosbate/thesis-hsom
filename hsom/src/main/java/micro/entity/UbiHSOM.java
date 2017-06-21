@@ -1,6 +1,5 @@
 package micro.entity;
 
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
@@ -9,32 +8,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class HSOM {
+public class UbiHSOM {
 
     private String id;
     private String name;
-    private HSOMGraph guts;
-    private Map<String, HSOMNode> nodes;
+    private UbiHSOMGraph guts;
+    private Map<String, UbiHSOMNode> nodes;
 
-    public HSOM(String name) {
+    public UbiHSOM(String name) {
         this.name = name;
-        guts = new HSOMGraphImpl();
+        guts = new UbiHSOMGraphImpl();
         nodes = new HashMap<>();
     }
 
-    public HSOM(JsonObject o){
+    public UbiHSOM(JsonObject o){
         this.id = o.getString("id");
         this.name = o.getString("name");
         this.nodes = convertNodesToHashMap(o.getJsonArray("nodes"));
-        this.guts = new HSOMGraphImpl(o.getJsonObject("graph"));
+        this.guts = new UbiHSOMGraphImpl(o.getJsonObject("graph"));
     }
 
-    private Map<String,HSOMNode> convertNodesToHashMap(JsonArray nodes) {
-        Map<String, HSOMNode> res = new HashMap<>(nodes.size());
+    private Map<String,UbiHSOMNode> convertNodesToHashMap(JsonArray nodes) {
+        Map<String, UbiHSOMNode> res = new HashMap<>(nodes.size());
         nodes.stream().forEach(o -> {
             JsonObject node = ((JsonObject)o);
             String id = node.getString("id");
-            HSOMNode newNode = new HSOMNode(node);
+            UbiHSOMNode newNode = new UbiHSOMNode(node);
             res.put(id, newNode);
         });
         return res;
@@ -49,28 +48,28 @@ public class HSOM {
     public void setName(String name) { this.name = name; }
 
 
-    public HSOMGraph getGuts(){
+    public UbiHSOMGraph getGuts(){
         return this.guts;
     }
 
-    public Map<String, HSOMNode> getNodes(){
+    public Map<String, UbiHSOMNode> getNodes(){
         return this.nodes;
     }
 
     public boolean add(String id){
         if(!nodes.containsKey(id))
-            return guts.add(id) && (nodes.put(id, new HSOMNode(id))) != null;
+            return guts.add(id) && (nodes.put(id, new UbiHSOMNode(id))) != null;
         return false;
     }
 
-    public boolean add(HSOMNode node){
+    public boolean add(UbiHSOMNode node){
         String id = node.getId();
         if(!nodes.containsKey(id))
             return guts.add(id) && (nodes.put(id, node)) == null;
         return false;
     }
 
-    public HSOMNode getNode(String id){
+    public UbiHSOMNode getNode(String id){
         return nodes.get(id);
     }
 
@@ -112,7 +111,7 @@ public class HSOM {
     }
 
     private void updateCascAsc(String asc, String current){
-        HSOMNode ascNode = nodes.get(asc);
+        UbiHSOMNode ascNode = nodes.get(asc);
         ascNode.removeConsumer(current);
     }
 
@@ -143,7 +142,7 @@ public class HSOM {
     }
 
     private void updateAsc(String asc, String current){
-        HSOMNode ascNode = nodes.get(asc);
+        UbiHSOMNode ascNode = nodes.get(asc);
         ascNode.removeConsumer(current);
         ascNode.addConsumers(guts.getOutgoing(current));
     }

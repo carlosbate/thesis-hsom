@@ -1,6 +1,6 @@
 package micro;
 
-public final class HSOMRESTAPI {
+public final class UbiHSOMRESTAPI {
 
     public static final String GET_ALL = "/hsoms";
 

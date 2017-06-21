@@ -1,6 +1,8 @@
 package micro.verticles;
 
+import io.vertx.core.AsyncResult;
 import io.vertx.core.json.JsonObject;
+import micro.entity.DBPullerType;
 import micro.entity.DBStreamer;
 import micro.service.DBPuller;
 import micro.service.DataStreamerService;
@@ -11,6 +13,7 @@ public class DBStreamerVerticle extends DataStreamerVerticle {
     private DBStreamer streamer;
     private DBPuller db;
     private long timerID;
+    private DBPullerType pullerType;
 
     public DBStreamerVerticle(DataStreamerService service, DBStreamer streamer){
         super(service, streamer.getId());
@@ -21,7 +24,10 @@ public class DBStreamerVerticle extends DataStreamerVerticle {
     @Override
     public void start() throws Exception {
         super.start();
-        db = DBPullerFactory.create(this.getVertx(), streamer.getDbName());
+        System.out.println(streamer.getDbName());
+        System.out.println(streamer.getSelectors());
+        System.out.println(streamer.getPullingType());
+        db = DBPullerFactory.create(this.getVertx(), streamer.getDbName(), streamer.getSelectors(), streamer.getPullingType());
     }
 
     @Override
@@ -33,13 +39,24 @@ public class DBStreamerVerticle extends DataStreamerVerticle {
 
     protected void initEBPub() {
         timerID = vertx.setPeriodic(streamer.getTimer(), h -> {
-             db.getRandomData(streamer.getRandomness()).setHandler(ar -> {
-                if(ar.succeeded())
-                    vertx.eventBus().publish(this.streamer.getOutputUrl(), ar.result());
-                else
-                    vertx.eventBus().publish(this.streamer.getOutputUrl(), new JsonObject().put("error", "Couldn't pull data from DB \n" + ar.cause()));
-            });
+            switch (streamer.getPullingType()){
+                case SEQUENTIAL:
+                    db.getSequentialData().setHandler(this::parseResultsAndSend);
+                    break;
+                case RANDOM:
+                    db.getRandomData(streamer.getRandomness()).setHandler(this::parseResultsAndSend);
+                    break;
+            }
         });
+    }
+
+    private void parseResultsAndSend(AsyncResult<JsonObject> ar){
+        if(ar.succeeded()){
+            JsonObject res = new JsonObject();
+            res.put("id", streamer.getId());
+            res.put("data", ar.result().getJsonArray("results"));
+            vertx.eventBus().publish(this.streamer.getOutputUrl(), res);
+        }
     }
 
 }

@@ -9,18 +9,27 @@ public class ProxyDataStreamer {
   private String out;
   private DataStreamerType type;
 
-  public ProxyDataStreamer(String id, String in, String out) {
-    this.id = id;
-    this.in = in;
-    this.out = out;
-    this.type = DataStreamerType.PROXY;
-  }
-
   public ProxyDataStreamer(JsonObject o){
     this.id = o.getString("id");
     this.in = o.getString("in");
     this.out = o.getString("out");
     this.type = DataStreamerType.valueOf(o.getString("type"));
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getInputChannel() {
+    return in;
+  }
+
+  public String getOutputChannel() {
+    return out;
+  }
+
+  public DataStreamerType getType() {
+    return type;
   }
 
   public JsonObject toJson(){

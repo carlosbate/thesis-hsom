@@ -2,19 +2,19 @@ package micro.service;
 
 import io.vertx.core.Future;
 import micro.ubifactory.UbiFactoryRPCService;
-import micro.utils.HSOMManager;
-import micro.entity.HSOM;
-import micro.entity.HSOMNode;
+import micro.utils.UbiHSOMManager;
+import micro.entity.UbiHSOM;
+import micro.entity.UbiHSOMNode;
 
 import java.util.List;
 import java.util.Optional;
 
-public class HSOMMapService implements HSOMService{
+public class UbiHSOMMapService implements UbiHSOMService {
 
-    private HSOMManager manager;
+    private UbiHSOMManager manager;
     private UbiFactoryRPCService ubis;
-    public HSOMMapService() {
-        this.manager = new HSOMManager();
+    public UbiHSOMMapService() {
+        this.manager = new UbiHSOMManager();
     }
 
     @Override
@@ -23,7 +23,7 @@ public class HSOMMapService implements HSOMService{
         Future<Boolean> result = Future.future();
         result.complete(true);
         /*
-        if(manager.addHSOM(new HSOM("my first hsom")))
+        if(manager.addHSOM(new UbiHSOM("my first hsom")))
             result.complete(true);
         else
             result.fail("Populate addHSOM");
@@ -32,8 +32,8 @@ public class HSOMMapService implements HSOMService{
     }
 
     @Override
-    public Future<List<HSOM>> getAll() {
-        Future<List<HSOM>> result = Future.future();
+    public Future<List<UbiHSOM>> getAll() {
+        Future<List<UbiHSOM>> result = Future.future();
         if(manager.isEmpty())
             result.fail("Empty");
         else{
@@ -43,10 +43,10 @@ public class HSOMMapService implements HSOMService{
     }
 
     @Override
-    public Future<HSOM> addHSOM(HSOM hsom) {
-        Future<HSOM> result = Future.future();
-        if(manager.addHSOM(hsom))
-            result.complete(hsom);
+    public Future<UbiHSOM> addHSOM(UbiHSOM ubiHsom) {
+        Future<UbiHSOM> result = Future.future();
+        if(manager.addHSOM(ubiHsom))
+            result.complete(ubiHsom);
         else
             result.fail("Fail addHSOM");
         return result;
@@ -63,8 +63,8 @@ public class HSOMMapService implements HSOMService{
     }
 
     @Override
-    public Future<Optional<HSOM>> getHSOM(String id) {
-        Future<Optional<HSOM>> result = Future.future();
+    public Future<Optional<UbiHSOM>> getHSOM(String id) {
+        Future<Optional<UbiHSOM>> result = Future.future();
         if(manager.getHSOM(id) == null)
             result.complete(Optional.empty());
         else
@@ -73,11 +73,11 @@ public class HSOMMapService implements HSOMService{
     }
 
     @Override
-    public Future<Optional<HSOMNode>> getNode(String hsomId, String nodeId) {
-        Future<Optional<HSOMNode>> result = Future.future();
+    public Future<Optional<UbiHSOMNode>> getNode(String hsomId, String nodeId) {
+        Future<Optional<UbiHSOMNode>> result = Future.future();
         if(manager.getHSOM(hsomId) == null)
             result.complete(Optional.empty());
-        HSOMNode node = manager.getHSOM(hsomId).getNode(nodeId);
+        UbiHSOMNode node = manager.getHSOM(hsomId).getNode(nodeId);
         if(node == null)
             result.complete(Optional.empty());
         else
@@ -86,8 +86,8 @@ public class HSOMMapService implements HSOMService{
     }
 
     @Override
-    public Future<HSOMNode> addNode(String hsomId, HSOMNode node) {
-        Future<HSOMNode> result = Future.future();
+    public Future<UbiHSOMNode> addNode(String hsomId, UbiHSOMNode node) {
+        Future<UbiHSOMNode> result = Future.future();
         if(manager.getHSOM(hsomId).getNode(node.getId()) != null)
             result.fail("Node already exists");
         if(manager.getHSOM(hsomId).add(node)){
@@ -126,5 +126,10 @@ public class HSOMMapService implements HSOMService{
         else
             result.fail("Fail addEdge");
         return result;
+    }
+
+    @Override
+    public Future<Boolean> updateHSOM(UbiHSOM ubiHsom) {
+        return null;
     }
 }

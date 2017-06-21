@@ -2,12 +2,13 @@ package micro.utils;
 
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import micro.entity.DBPullerType;
 import micro.service.DBPuller;
 
 public class DBPullerFactory {
 
-    public static DBPuller create(Vertx vertx, String dbName){
-        DBPuller res = new DBPuller(vertx, buildSQLiteConfig(dbName),dbName);
+    public static DBPuller create(Vertx vertx, String dbName, String selectors, DBPullerType type){
+        DBPuller res = new DBPuller(vertx, buildSQLiteConfig(dbName),dbName, selectors, type);
         return res;
     }
 

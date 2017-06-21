@@ -38,21 +38,9 @@ public final class RandomUtils {
     }
 
     public static double [][] convertObservations(JsonObject json){
-        /*
-        JsonArray array = json.getJsonArray("data");
-        array.stream().forEach(o -> res.add(convertJsonArrayToDoubleArray((JsonArray) o)));
-        */
         JsonArray array = json.getJsonArray("data");
         List<Double[]> res = new ArrayList<>(array.size());
         array.stream().forEach(o -> res.add(convertJsonArrayToDoubleObjectArray((JsonArray) o)));
-
-        /*
-        List<Double[]> res = new ArrayList<>(json.getJsonArray("data"));
-        List<Double[]> res = json.getJsonArray("data").stream()
-                .forEach(m -> res.add((Double[])m))
-                .map(Double[].class::cast)
-                .collect(Collectors.toList());
-                */
         return convertToDoubleMatrix(res);
     }
 

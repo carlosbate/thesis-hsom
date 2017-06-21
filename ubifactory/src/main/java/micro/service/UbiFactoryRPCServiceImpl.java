@@ -88,9 +88,8 @@ public class UbiFactoryRPCServiceImpl implements UbiFactoryRPCService {
             if(res.succeeded()){
                 this.vertx.eventBus().send(UrlBuilder.createStopUrl(id), true, ar -> {
                     if(ar.succeeded()){
-                        vertx.undeploy((String)ar.result().body(), voidAsyncResult ->
-                                handler.handle(Future.succeededFuture(true))
-                        );
+                        handler.handle(Future.succeededFuture(true));
+                        //vertx.undeploy((String)ar.result().body(), voidAsyncResult ->);
                     }
                     else
                         handler.handle(Future.failedFuture(res.cause()));

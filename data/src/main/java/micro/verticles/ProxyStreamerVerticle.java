@@ -32,7 +32,11 @@ public class ProxyStreamerVerticle extends DataStreamerVerticle {
     @Override
     protected void initEBPub() {
         consumer = eb.<JsonObject>consumer(this.streamer.getInputUrl()).bodyStream().toObservable();
-        subscription = consumer.subscribe(m ->  vertx.eventBus().publish(this.streamer.getOutputUrl(), m));
+        subscription = consumer.subscribe(m ->  {
+            //System.out.println("Proxy@" + this.streamer.getId()+" forwarding:");
+            //System.out.println(m.encodePrettily());
+            vertx.eventBus().publish(this.streamer.getOutputUrl(), m);
+        });
     }
 
 }

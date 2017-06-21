@@ -1,10 +1,8 @@
 package micro.datastreamers;
 
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import micro.utils.JsonUtils;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ZipDataStreamer {
@@ -16,22 +14,37 @@ public class ZipDataStreamer {
   private List<String> order;
   private long timer;
 
-  public ZipDataStreamer(String id, String in, String out, List<String> order, long timer){
-    this.id = id;
-    this.in = in;
-    this.out = out;
-    this.order = order;
-    this.type = DataStreamerType.ZIP;
-    this.timer = timer;
-  }
-
   public ZipDataStreamer(JsonObject o){
     this.id = o.getString("id");
-    this.type = DataStreamerType.valueOf(o.getString("type"));
     this.in = o.getString("in");
     this.out = o.getString("out");
+    this.type = DataStreamerType.valueOf(o.getString("type"));
     this.timer = o.getLong("timer");
     this.order = JsonUtils.convertJaToList(o.getJsonArray("order"));
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public DataStreamerType getType() {
+    return type;
+  }
+
+  public String getInputChannel() {
+    return in;
+  }
+
+  public String getOutputChannel() {
+    return out;
+  }
+
+  public List<String> getOrder() {
+    return order;
+  }
+
+  public long getTimer() {
+    return timer;
   }
 
   public JsonObject toJson(){
@@ -41,7 +54,7 @@ public class ZipDataStreamer {
         .put("out", this.out)
         .put("type", this.type)
         .put("timer", this.timer)
-        .put("order", JsonUtils.convertListToJA(order));
+        .put("order", JsonUtils.convertToJA(order));
   }
 
 }

@@ -1,11 +1,13 @@
 package micro.verticles;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.eventbus.EventBus;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.eventbus.Message;
 import micro.entity.DataStreamChannel;
+import micro.entity.HSOMDefaultNormalizationFilter;
 import micro.entity.HUbiSOMBMU;
 import micro.entity.HUbiSOMNode;
 import micro.service.UbiFactoryRPCService;
@@ -27,12 +29,14 @@ public class HUbiSOMNodeVerticle extends AbstractVerticle{
     Subscription getWeightsSubscription;
     Subscription getStopSubscription;
     UbiFactoryRPCService service;
+    HSOMDefaultNormalizationFilter normalizator;
     //TODO NodeSnapshotService snapshots;
 
     public HUbiSOMNodeVerticle(UbiFactoryRPCService service, JsonObject o){
         this.node = new HUbiSOMNode(o);
         this.channel = new DataStreamChannel(this.node.getId());
         this.service = service;
+        this.normalizator = new HSOMDefaultNormalizationFilter(node.getWidth(), node.getHeight());
         //TODO this.snapshots = snapshots;
     }
 
@@ -112,7 +116,8 @@ public class HUbiSOMNodeVerticle extends AbstractVerticle{
                     res.add(bmu.toJson());
                 });
         return new JsonObject()
-                .put("bmus", res);
+            .put("id", this.node.getId())
+            .put("data", res);
     }
 
     /**
@@ -120,7 +125,21 @@ public class HUbiSOMNodeVerticle extends AbstractVerticle{
      * @param data - JsonObject with the following format e.g. { "data": [[0.1,0.11], [0.2,0.22],[0.3,0.33]] }
      */
     private void feedAndPropagate(JsonObject data){
-        eb.publish(channel.out(), processData(data));
+        Arrays.stream(RandomUtils.convertObservations(data))
+            .forEach(obs -> {
+                HUbiSOMBMU bmu = node.feed(obs);
+                JsonObject output = new JsonObject()
+                    .put("id", this.node.getId())
+                    .put("data", new JsonArray().add(normalizeOutput(bmu)));
+                eb.publish(channel.out(), output);
+            });
+    }
+
+    private JsonArray normalizeOutput(HUbiSOMBMU bmu){
+        double [] aux = new double[2];
+        aux [0] = bmu.getCoordX();
+        aux [1] = bmu.getCoordY();
+        return RandomUtils.convertDoubleArrayToJsonArray(normalizator.normalize(aux));
     }
 
     private void sendData(Message<Boolean> message){

@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * Created by Rubito on 18/08/2016.
  */
-public interface HSOMGraph {
+public interface UbiHSOMGraph {
 
     /**
      *  Adds n nodes to the graph.

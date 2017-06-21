@@ -3,10 +3,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>micro</groupId>
-  <artifactId>hsom</artifactId>
+  <artifactId>ubiHsom</artifactId>
   <version>3.0</version>
 
-  <name>hsom</name>
+  <name>ubiHsom</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -95,7 +95,7 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <manifestEntries>
                     <Main-Class>io.vertx.core.Launcher</Main-Class>
-                    <Main-Verticle>micro.verticles.HSOMVerticle</Main-Verticle>
+                    <Main-Verticle>micro.verticles.UbiHSOMVerticle</Main-Verticle>
                   </manifestEntries>
                 </transformer>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">

@@ -9,6 +9,8 @@ import java.util.List;
 public class UbiSOM {
 
     private String id;
+    private String in;
+    private String out;
     private String name;
     private List<String> weightLabels;
     private int width;
@@ -21,23 +23,12 @@ public class UbiSOM {
     private double betaValue;
     private JsonObject normalization;
 
-    public UbiSOM(String id, String name, List<String> weightLabels, int width, int height, int dim, double alphaI, double alphaF, double sigmaI, double sigmaF, double betaValue, JsonObject normalization) {
-        this.id = id;
-        this.name = name;
-        this.weightLabels = weightLabels;
-        this.width = width;
-        this.height = height;
-        this.dim = dim;
-        this.alphaI = alphaI;
-        this.alphaF = alphaF;
-        this.sigmaI = sigmaI;
-        this.sigmaF = sigmaF;
-        this.betaValue = betaValue;
-        this.normalization = normalization;
-    }
-
     public UbiSOM(JsonObject ubisom){
-        this.id = ubisom.getString("id");
+        if(ubisom.containsKey("id")){
+            this.id = ubisom.getString("id");
+            this.in = ubisom.getString("in");
+            this.out = ubisom.getString("out");
+        }
         this.name = ubisom.getString("name");
         this.width = ubisom.getInteger("width");
         this.height = ubisom.getInteger("height");
@@ -53,20 +44,56 @@ public class UbiSOM {
         wLabels.stream().forEach(e -> weightLabels.add((String)e));
     }
 
-    public static JsonObject createUbiSOM(String id, String name, List<String> weightLabels, int width, int height, int dim, double alphaI, double alphaF, double sigmaI, double sigmaF, double betaValue, JsonObject normalization){
-        return new JsonObject()
-            .put("id",id)
-            .put("name",name)
-            .put("weight-labels", weightLabels)
-            .put("width", width)
-            .put("height",height)
-            .put("dim", dim)
-            .put("alpha_i", alphaI)
-            .put("alpha_f", alphaF)
-            .put("sigma_i", sigmaI)
-            .put("sigma_f", sigmaF)
-            .put("beta_value", betaValue)
-            .put("normalization", normalization);
+    public String getId() {
+        return id;
+    }
+
+    public String getInputChannel() {
+        return in;
+    }
+
+    public String getOutputChannel() {
+        return out;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getWeightLabels() {
+        return weightLabels;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getDim() {
+        return dim;
+    }
+
+    public double getAlphaI() {
+        return alphaI;
+    }
+
+    public double getAlphaF() {
+        return alphaF;
+    }
+
+    public double getSigmaI() {
+        return sigmaI;
+    }
+
+    public double getSigmaF() {
+        return sigmaF;
+    }
+
+    public double getBetaValue() {
+        return betaValue;
     }
 
     private JsonArray convertLabels(){
@@ -76,19 +103,24 @@ public class UbiSOM {
     }
 
     public JsonObject toJson(){
-        return new JsonObject()
-                .put("id",this.id)
-                .put("name",this.name)
-                .put("weight-labels", convertLabels())
-                .put("width", this.width)
-                .put("height",this.height)
-                .put("dim", this.dim)
-                .put("alpha_i", this.alphaI)
-                .put("alpha_f", this.alphaF)
-                .put("sigma_i", this.sigmaI)
-                .put("sigma_f", this.sigmaF)
-                .put("beta_value", this.betaValue)
-                .put("normalization", this.normalization);
+        JsonObject res = new JsonObject();
+        if(id != null){
+            res.put("id",this.id);
+            res.put("in", this.in);
+            res.put("out", this.out);
+        }
+        res.put("name",this.name)
+            .put("weight-labels", convertLabels())
+            .put("width", this.width)
+            .put("height",this.height)
+            .put("dim", this.dim)
+            .put("alpha_i", this.alphaI)
+            .put("alpha_f", this.alphaF)
+            .put("sigma_i", this.sigmaI)
+            .put("sigma_f", this.sigmaF)
+            .put("beta_value", this.betaValue)
+            .put("normalization", this.normalization);
+        return res;
     }
 
 }

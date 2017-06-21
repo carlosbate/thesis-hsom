@@ -13,7 +13,7 @@ public class ZipStreamer extends DataStreamerImpl{
     super(o.getString("id"), DataStreamerType.ZIP);
     this.order = new ZipSet();
     this.bmillis = o.getLong("timer");
-    initOrder(o.getJsonArray("concat-order"));
+    initOrder(o.getJsonArray("order"));
   }
 
   public ZipSet getOrder(){

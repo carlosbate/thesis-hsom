@@ -9,6 +9,7 @@ import rx.Observable;
 import rx.Subscription;
 
 import java.util.HashMap;
+import java.util.stream.IntStream;
 
 public class ZipStreamerVerticle extends DataStreamerVerticle{
 
@@ -47,20 +48,27 @@ public class ZipStreamerVerticle extends DataStreamerVerticle{
     consumerSub = consumer.
         filter(json -> !inputs.containsKey(json.getString("id")))
         .subscribe(o ->
-            inputs.put(
-                o.getString("id"),
-                o.getJsonArray("data")
-            )
+              inputs.put(
+                  o.getString("id"),
+                  o.getJsonArray("data")
+              )
         );
 
     timer = vertx.periodicStream(streamer.getTimer()).toObservable();
     timerSub = timer.
         subscribe(aLong -> {
-          JsonArray concatOutput = new JsonArray();
-          if(inputs.values().size() == 3){
-            for(String s : streamer.getOrder().getSet())
-              concatOutput.add(inputs.get(s));
-            eb.publish(streamer.getOutputUrl(), concatOutput);
+          JsonObject output = new JsonObject();
+          if(inputs.values().size() == streamer.getOrder().size()){
+            JsonArray concatArray = new JsonArray();
+            for(String s : streamer.getOrder().getSet()){
+              inputs.get(s).forEach(o -> {
+                JsonArray array = (JsonArray) o;
+                IntStream.range(0, array.size())
+                    .forEach(i -> concatArray.add(array.getDouble(i)));
+              });
+            }
+            output.put("data", new JsonArray().add(concatArray));
+            eb.publish(streamer.getOutputUrl(), output);
           }
           inputs.clear();
         });

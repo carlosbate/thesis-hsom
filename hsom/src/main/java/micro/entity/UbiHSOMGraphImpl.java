@@ -8,15 +8,15 @@ import org.jgrapht.graph.SimpleDirectedGraph;
 
 import java.util.*;
 
-public class HSOMGraphImpl implements HSOMGraph {
+public class UbiHSOMGraphImpl implements UbiHSOMGraph {
 
     private DirectedGraph<String, DefaultEdge> guts;
 
-    public HSOMGraphImpl(){
+    public UbiHSOMGraphImpl(){
         guts = new SimpleDirectedGraph<>(DefaultEdge.class);
     }
 
-    public HSOMGraphImpl(JsonObject o){
+    public UbiHSOMGraphImpl(JsonObject o){
         guts = convertJOToGraph(o);
     }
 

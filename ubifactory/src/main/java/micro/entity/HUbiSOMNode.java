@@ -155,6 +155,14 @@ public class HUbiSOMNode {
                 .put("weight-labels", this.getWeightsLabels());
     }
 
+    public int getWidth(){
+        return this.ubisom.getWidth();
+    }
+
+    public int getHeight(){
+        return this.ubisom.getHeight();
+    }
+
     private String getName(){
         return this.nodeName;
     }

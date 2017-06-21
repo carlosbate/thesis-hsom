@@ -1,7 +1,7 @@
 package micro.entity;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import micro.utils.RandomUtils;
 import somlp.model.nn.ubisom.BestMatchingUnit;
 
 public class HUbiSOMBMU {
@@ -20,6 +20,20 @@ public class HUbiSOMBMU {
                 o.getInteger("y")
         );
         this.prototype = new HUbiSOMPrototype(o);
+    }
+
+    public JsonArray getBMUCoords(){
+        return new JsonArray()
+            .add(getCoordX())
+            .add(getCoordY());
+    }
+
+    public int getCoordX(){
+        return this.bmu.x;
+    }
+
+    public int getCoordY(){
+        return this.bmu.y;
     }
 
     @Override
